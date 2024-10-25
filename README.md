@@ -47,7 +47,7 @@ This script assumes:
 
 - The path to the model is updated 
 ```
-model_path = '../model_checkpoints/model_checkpoint_wCalphad_gs_2019-09-17-02-09.joblib'
+model_path = '../model_checkpoints/model_checkpoint_FILENAME_HERE_2024-10-20-12-38.joblib'
 ```
 - The data file is passed in as an argument.
 - The transform mask (if applicable) is updated.
@@ -57,8 +57,8 @@ transform_mask_init = pd.read_csv('../transform_mask/FILENAME_HERE.csv')
 
 ## Data provided in this repo:
 
-- The 56 high entropy carbides and their EFA values from density functional theory (DFT). 
-- The 70 new Cr-containing carbides
-- Pre-fit models using the 56 data points with DFT-based labels.
+- The 232 high entropy rare earth phosphates and their EFA values from density functional theory (DFT). 
+- Multicomponent rare earth phosphates for validation
+- Pre-fit models using the 233 data points with DFT-based labels.
 - Definitions of the predictor variable names `Predictor-Variable-Definitions.pdf`
 
