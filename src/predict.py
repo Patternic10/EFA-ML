@@ -17,12 +17,12 @@ def model_predict(args: argparse.Namespace) -> None:
     :return: feature importance, fit model, gridsearch results, and data transform mask.
     """
 
-    rf = load('../model_checkpoints/model_checkpoint_wCalphad_gs_2019-09-17-02-09.joblib')
+    rf = load('../model_checkpoints/model_checkpoint_FILENAME_HERE_2024-10-20-12-40.joblib')
     # output_direc = '../HEA_alloys/wCALPHAD/Feature_set_2/'
 
     input_ = args.input
 
-    transform_df = pd.read_csv('../transform_mask/FILENAME_HERE.csv')
+    transform_df = pd.read_csv('../transform_mask/Transform_FILENAME_HERE2024-10-20-12-39.csv')
 
     p = Path(input_)
     p = p.parent
@@ -35,9 +35,9 @@ def model_predict(args: argparse.Namespace) -> None:
     df_orig = pd.read_excel(input_)
     # print(df_orig)
 
-    orig = df_orig.as_matrix()[:, 1:]
+    orig = df_orig.values[:, 1:]
 
-    alloy_id = pd.DataFrame(df_orig['Name'])
+    alloy_id = pd.DataFrame(df_orig['Composition'])
     # print(alloy_id)
 
     whereNan = np.isnan(list(orig[:, -1]))
@@ -45,7 +45,7 @@ def model_predict(args: argparse.Namespace) -> None:
     news = orig[whereNan]
 
     X_test = news[:, :-1]
-    X_test = X_test[:, transform_df['0'].as_matrix()]
+    X_test = X_test[:, transform_df['0'].values]
 
     predictions = rf.predict(X_test)
     # print(predictions)

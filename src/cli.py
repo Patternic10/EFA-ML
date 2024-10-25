@@ -19,7 +19,7 @@ def get_importance(args: argparse.Namespace) -> None:
     :return: feature importance, fit model, gridsearch results, and data transform mask.
     """
 
-    select_from_model = False
+    select_from_model = True
     transform_first = False
 
     input_ = args.input
@@ -47,7 +47,7 @@ def get_importance(args: argparse.Namespace) -> None:
 
     df_orig = pd.read_excel(input_)
 
-    orig = df_orig.as_matrix()[:, 1:]
+    orig = df_orig.values[:, 1:]
 
     feature_names = list(df_orig.columns)[1:-1]
 
@@ -90,7 +90,7 @@ def get_importance(args: argparse.Namespace) -> None:
         print("The original Xdf is shape: ")
         print(X_train.shape)
 
-        select_fm = sklearn.feature_selection.SelectFromModel(estimator=rf, threshold=-np.inf, max_features=8)
+        select_fm = sklearn.feature_selection.SelectFromModel(estimator=rf, threshold=-np.inf, max_features=10)
 
         select_fm.fit_transform(X_train, y_train)
 
@@ -108,12 +108,17 @@ def get_importance(args: argparse.Namespace) -> None:
     rf = sklearn.ensemble.RandomForestRegressor(n_jobs=-1, random_state=42, bootstrap=True)
 
     gs = sklearn.model_selection.GridSearchCV(rf, param_grid={'n_estimators': [i for i in range(10, 110, 10)],
-                                                              'criterion': ['mse', 'mae'],
+                                                              'criterion': ['squared_error', 'absolute_error'],
                                                               'max_features': [i for i in range(1, X_train.shape[1])]},
                                               scoring='neg_mean_absolute_error', cv=5, n_jobs=-1, refit=True, verbose=1)
 
     print("Optimizing the Hyperparameters. Please be patient.")
     yay = gs.fit(X_train, y_train)
+
+    # Extract R² scores from each fold and calculate the average
+    r2_scores = gs.cv_results_['mean_test_score']
+    avg_r2_score = np.mean(r2_scores)
+    print(f"Average R² score across folds: {avg_r2_score}")
 
     grid_search_df = pd.DataFrame(gs.cv_results_)
     grid_search_df.to_csv(
@@ -146,7 +151,7 @@ def parser() -> argparse.Namespace:
 
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('input', type=str, help='path/to/data/file.xlsx')
+    parser.add_argument('input', type=str, help='../data/Moduli_with_separate_features.xlsx')
 
     return parser.parse_args()
 

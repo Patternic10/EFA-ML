@@ -14,7 +14,7 @@ from joblib import dump, load
 os.environ["PATH"] += os.pathsep + 'C:/Program Files (x86)/Graphviz2.38/bin/'
 sys.path.append('C:/Program Files (x86)/Graphviz2.38/bin/')
 
-model_path = '../model_checkpoints/model_checkpoint_wCalphad_gs_2019-09-17-02-09.joblib'
+model_path = '../model_checkpoints/model_checkpoint_FILENAME_HERE_2024-08-14-07-33.joblib'
 
 estimator = load(model_path)
 
@@ -35,9 +35,9 @@ def visualize(args: argparse.Namespace, i_tree=0) -> None:
     # Initial feature elimination if you have a predetermined mask
     transform_first = True
     if transform_first is True:
-        transform_mask_init = pd.read_csv('../transform_mask/FILENAME_HERE.csv')
+        transform_mask_init = pd.read_csv('../transform_mask/Transform_FILENAME_HERE2024-08-14-07-33.csv')
         truth_series = pd.Series(transform_mask_init['0'], name='bools')
-        df_orig.drop(['Name', 'EFA'], axis=1, inplace=True)
+        df_orig.drop(['Composition', 'EFA'], axis=1, inplace=True)
         df_orig = pd.DataFrame(df_orig.iloc[:, truth_series.values])
 
         col = list(df_orig.columns)[:]

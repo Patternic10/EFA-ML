@@ -30,14 +30,16 @@ def main(args: argparse.Namespace) -> None:
     # Linear plot of all predictions
     dims = (7, 7)
     plt.rcParams['figure.figsize'] = dims
-    df_preds = df['Predicted_EFA']
-    df_truth = df['True_Label']
+    df_preds = df['Pred']
+    df_truth = df['Actual']
     linear_a = sns.regplot(x=df_truth, y=df_preds, fit_reg=False)
-    linear_a.set_xlim(0, 150)
-    linear_a.set_ylim(0, 150)
-    plt.plot([0, 150], [0, 150], linewidth=2, color="b")
+    linear_a.set_xlim(0, 2000)
+    linear_a.set_ylim(0, 2000)
+    linear_a.set_xlabel("Actual EFA [eV/atom]$^{-1}$")  # Label for x-axis
+    linear_a.set_ylabel("Predicted EFA [eV/atom]$^{-1}$")  # Label for y-axis
+    plt.plot([0, 2000], [0, 2000], linewidth=2, color="b")
     # plt.title(file)
-    plt.savefig(str(plots) + '/Orig_56_Predicted_EFA_no_Calphad_V2_updated_'
+    plt.savefig(str(plots) + '/Orig_234_Predicted_EFA_V2_updated_'
                 + str(time.strftime("%Y-%m-%d-%I-%M")) + '.png')
     plt.show()
 
@@ -45,17 +47,20 @@ def main(args: argparse.Namespace) -> None:
     dims = (7, 7)
     plt.rcParams['figure.figsize'] = dims
 
-    df_preds_orig = df['Predicted_EFA'].loc[df['Group'] == 1]
-    df_truth_orig = df['True_Label'].loc[df['Group'] == 1]
+    df_preds_orig = df['Pred'].loc[df['Group'] == 1]
+    df_truth_orig = df['Actual'].loc[df['Group'] == 1]
 
-    df_preds_new = df['Predicted_EFA'].loc[df['Group'] == 2]
-    df_truth_new = df['True_Label'].loc[df['Group'] == 2]
+    df_preds_new = df['Pred'].loc[df['Group'] == 2]
+    df_truth_new = df['Actual'].loc[df['Group'] == 2]
 
-    linear_m = sns.regplot(x=df_truth_orig, y=df_preds_orig, fit_reg=False, color="b", marker='.')
-    linear_m = sns.regplot(x=df_truth_new, y=df_preds_new, fit_reg=False, color="r", marker='.')
-    linear_m.set_xlim(0, 150)
-    linear_m.set_ylim(0, 150)
-    plt.plot([0, 150], [0, 150], linewidth=2, color="b")
+    linear_m = sns.regplot(x=df_truth_orig, y=df_preds_orig, fit_reg=False, color="b", marker='.', label="With manual features")
+    linear_m = sns.regplot(x=df_truth_new, y=df_preds_new, fit_reg=False, color="r", marker='.', label="Without manual features")
+    linear_m.set_xlim(0, 2000)
+    linear_m.set_ylim(0, 2000)
+    linear_m.set_xlabel("Actual EFA [eV/atom]$^{-1}$")  # Label for x-axis
+    linear_m.set_ylabel("Predicted EFA [eV/atom]$^{-1}$")  # Label for y-axis
+    plt.plot([0, 2000], [0, 2000], linewidth=2, color="b")
+    plt.legend()
     plt.savefig(str(plots) + '/FILENAME_HERE_' + str(time.strftime("%Y-%m-%d-%I-%M")) + '.png')
     plt.show()
 
